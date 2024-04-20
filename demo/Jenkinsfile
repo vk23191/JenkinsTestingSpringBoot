@@ -1,18 +1,42 @@
 pipeline {
-    agent any
-    
-    tools {
-        // Use the Git installation named 'Default' configured in Jenkins
-        git 'Default'
-    }
+    agent any  // Executes the pipeline on any available Jenkins agent
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the Git repository
-                git branch: 'main', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
+                // Checkout source code from GitHub repository
+                git branch: 'main', credentialsId: '10Xkamehamhe!!', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
             }
         }
-        // Add more stages as needed
+
+        stage('Build') {
+            steps {
+                // Build a Maven project (replace with your build tool and commands)
+                sh 'mvn clean package'  // Assumes Maven is installed on the Jenkins agent
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests (if applicable)
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deployment steps (e.g., deploying to a server)
+                sh 'mvn deploy'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded! This can include additional notifications or steps upon success.'
+        }
+        failure {
+            echo 'Pipeline failed! This can include cleanup or notifications upon failure.'
+        }
     }
 }
