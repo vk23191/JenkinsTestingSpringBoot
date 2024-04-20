@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                // Checkout source code from Git
+                git 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
+                
+                // Build the Maven project
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Run unit tests
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Deploy Spring Boot application
+                sh 'java -jar target/your-spring-boot-app.jar'
+            }
+        }
+    }
+}
