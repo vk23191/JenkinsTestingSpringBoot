@@ -1,11 +1,14 @@
 pipeline {
     agent any  // Executes the pipeline on any available Jenkins agent
-
+environment {
+        M2_HOME = 'F:\apache-maven-3.9.6'  // Specify the Maven installation path
+        PATH = "${env.PATH};${M2_HOME}\\bin" // Add Maven bin directory to the PATH
+    }
     stages {
         stage('Checkout') {
             steps {
                 // Checkout source code from GitHub repository
-                git branch: 'main', credentialsId: '10Xkamehamhe!!', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
+                git branch: 'main', credentialsId: '479a7451-9583-4262-b166-f2793f53a438', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
             }
         }
 
