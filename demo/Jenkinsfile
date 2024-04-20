@@ -1,8 +1,9 @@
 pipeline {
-    agent any  // Executes the pipeline on any available Jenkins agent
-environment {
-        M2_HOME = 'F:\apache-maven-3.9.6'  // Specify the Maven installation path
-        PATH = "${env.PATH};${M2_HOME}\\bin" // Add Maven bin directory to the PATH
+     agent any
+
+    tools {
+        // Specify the Maven installation
+        maven 'Maven'
     }
     stages {
         stage('Checkout') {
