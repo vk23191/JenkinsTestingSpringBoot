@@ -13,24 +13,22 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and Test') {
             steps {
-                // Build a Maven project (replace with your build tool and commands)
-                sh 'mvn clean package'  // Assumes Maven is installed on the Jenkins agent
+                dir('demo') {
+                    // Execute Maven build commands
+                    sh 'mvn clean test'
+                }
             }
         }
 
-        stage('Test') {
+        stage('Deploy to Tomcat') {
             steps {
-                // Run tests (if applicable)
-                sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Deployment steps (e.g., deploying to a server)
-                sh 'mvn deploy'
+                // Deploy the WAR file to Tomcat using Tomcat Manager API
+                script {
+                    def warFile = findFiles(glob: 'target/*.war')[0]
+                    sh "curl -v --upload-file ${warFile} '${TOMCAT_URL}/manager/text/deploy?path=/${APP_NAME}&update=true'"
+                }
             }
         }
     }
