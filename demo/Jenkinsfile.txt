@@ -26,8 +26,17 @@ pipeline {
             steps {
                 // Deploy the WAR file to Tomcat using Tomcat Manager API
                 script {
-                    def warFile = findFiles(glob: 'target/*.war')[0]
-                    sh "curl -v --upload-file ${warFile} '${TOMCAT_URL}/manager/text/deploy?path=/${APP_NAME}&update=true'"
+                    // Find WAR files in the 'target' directory
+                    def warFiles = findFiles(glob: 'my-webapp/target/*.war')
+
+                    // Check if any WAR files were found
+                    if (warFiles.isEmpty()) {
+                        error 'No WAR files found to deploy'
+                    } else {
+                        // Deploy the first WAR file to Tomcat (assuming only one WAR is generated)
+                        def warFile = warFiles[0]
+                        sh "curl -v --upload-file ${warFile} '${TOMCAT_URL}/manager/text/deploy?path=/${APP_NAME}&update=true'"
+                    }
                 }
             }
         }
