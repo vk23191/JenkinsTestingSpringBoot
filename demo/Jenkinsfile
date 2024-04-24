@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout source code from GitHub repository
-                git branch: 'main', credentialsId: '479a7451-9583-4262-b166-f2793f53a438', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
+                git branch: 'main', credentialsId: 'f5fe8d92-8d03-465f-9d5d-6c052451abde', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
             }
         }
 
