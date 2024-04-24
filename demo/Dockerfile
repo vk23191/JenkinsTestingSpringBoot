@@ -10,4 +10,4 @@ COPY target/my-webapp.war /my-webapp.war
 EXPOSE 8083
 
 # Command to run the Spring Boot application
-CMD ["java", "-jar", "eurekaserver.jar"]
+CMD ["java", "-war", "eurekaserver.war"]
