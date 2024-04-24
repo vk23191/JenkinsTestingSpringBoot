@@ -1,11 +1,13 @@
-# Use the official Tomcat base image from Docker Hub
-FROM tomcat:latest
+# Use a base image with OpenJDK 21
+FROM openjdk:21
+# Set the working directory inside the container
+WORKDIR /
 
-# Optionally, copy your WAR file into Tomcat's webapps directory
-COPY ./path/to/your/application.war /usr/local/tomcat/webapps/
+# Copy the compiled JAR file into the container
+COPY target/my-webapp.war /my-webapp.war
 
-# Expose the port that Tomcat listens on (default is 8080)
-EXPOSE 8080
+# Expose the port the application runs on
+EXPOSE 8083
 
-# Command to run when the container starts
-CMD ["catalina.sh", "run"]
+# Command to run the Spring Boot application
+CMD ["java", "-jar", "eurekaserver.jar"]
