@@ -12,7 +12,7 @@ environment {
         stage('Checkout') {
             steps {
                 // Checkout source code from GitHub repository
-                git branch: 'main', credentialsId: 'f5fe8d92-8d03-465f-9d5d-6c052451abde', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
+                git branch: 'main', credentialsId: 'e8dd3ede-7e98-45bf-820f-577a331cb564', url: 'https://github.com/vk23191/JenkinsTestingSpringBoot.git'
             }
         }
 
@@ -32,18 +32,28 @@ stage('Build') {
                 }
             }
         }
-        stage('Deploy to Tomcat') {
+        
+		stage('Deploy') {
             steps {
                 script {
                     def warFiles = findFiles(glob: 'demo/target/*.war')
-
-                    if (warFiles == null || warFiles.length == 0) {
-                        error 'No WAR files found to deploy'
+                    if (warFiles) {
+                        sshPublisher(
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'UAT', // Name of the SSH configuration in Jenkins
+                                    transfers: [
+                                        sshTransfer(
+                                            sourceFiles: warFiles[0].path, // Assuming there's only one WAR file
+                                            remoteDirectory: '/opt/uat_sth_manak_8081/webapps/', // Destination directory on the remote server
+											flatten: true
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
                     } else {
-                        def warFile = warFiles[0] // Assuming deploying the first WAR file found
-                        def deployUrl = "${env.TOMCAT_URL}/manager/text/deploy?path=/${env.APP_NAME}&update=true"
-
-                        sh "curl -v --upload-file ${warFile.path} '${deployUrl}'"
+                        error 'No WAR files found!'
                     }
                 }
             }
